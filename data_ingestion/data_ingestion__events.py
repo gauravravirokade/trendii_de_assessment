@@ -6,20 +6,24 @@ import psycopg2
 from psycopg2 import sql
 from datetime import datetime
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()  # Load .env file
 
 # -------- CONFIG --------
-SOURCE_DIR = Path("/Users/gauravrokade/Downloads/trendi_source_data/events_data")              # Folder with incoming parquet files
-ARCHIVE_DIR = Path("/Users/gauravrokade/Downloads/trendi_source_data/ingested_data")           # Where to move processed files
-LOG_FILE = Path("logs/ingestion_errors.log")
 DB_CONFIG = {
-    "dbname": "trendii_de_assessment",
-    "user": "postgres",
-    "password": "postgres",
-    "host": "localhost",  # or your DB host
-    "port": 5432          # default Postgres port
+    "dbname": os.getenv("DB_NAME"),
+    "user": os.getenv("DB_USER"),
+    "password": os.getenv("DB_PASSWORD"),
+    "host": os.getenv("DB_HOST"),
+    "port": int(os.getenv("DB_PORT"))
 }
-TARGET_TABLE = "raw.raw_events"         # Now explicitly in raw schema
-LOG_TABLE = "raw.ingestion_log"         # Also in raw schema
+
+SOURCE_DIR = Path(os.getenv("SOURCE_DIR"))
+ARCHIVE_DIR = Path(os.getenv("ARCHIVE_DIR"))
+LOG_FILE = Path(os.getenv("LOG_FILE"))
+TARGET_TABLE = os.getenv("TARGET_TABLE")
+LOG_TABLE = os.getenv("LOG_TABLE")
 
 # -------- DB SETUP --------
 def get_connection():
