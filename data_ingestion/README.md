@@ -1,8 +1,7 @@
-Here’s your **README.md**-ready version for the ingestion script:
 
-````markdown
+
 # Data Ingestion — `data_ingestion__events.py`
-
+````markdown
 ## Pre-requisites
 
 1. **Python Version**
@@ -11,13 +10,13 @@ Here’s your **README.md**-ready version for the ingestion script:
 2. **Required Python Packages**
    ```bash
    pip install pandas pyarrow numpy psycopg2-binary python-dotenv
-````
+```
 
 *If using Conda:*
 
 ```bash
 conda install -c conda-forge pandas pyarrow numpy psycopg2
-```
+````
 
 3. **PostgreSQL Database**
    Ensure PostgreSQL is running locally (or on an accessible host) and credentials are set in `DB_CONFIG` or `.env`.
