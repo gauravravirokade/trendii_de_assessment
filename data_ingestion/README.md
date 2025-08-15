@@ -1,22 +1,21 @@
 
 
 # Data Ingestion — `data_ingestion__events.py`
-````markdown
+
 ## Pre-requisites
 
 1. **Python Version**
    Python 3.8 or higher.
 
 2. **Required Python Packages**
-   ```bash
+
    pip install pandas pyarrow numpy psycopg2-binary python-dotenv
-```
+
 
 *If using Conda:*
 
-```bash
 conda install -c conda-forge pandas pyarrow numpy psycopg2
-````
+
 
 3. **PostgreSQL Database**
    Ensure PostgreSQL is running locally (or on an accessible host) and credentials are set in `DB_CONFIG` or `.env`.
