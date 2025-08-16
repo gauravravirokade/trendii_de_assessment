@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: src_events
+    description: source model for all events data
+    config:
+      indexes:
+        - columns: ['event_name']
+    columns: # This 'columns' should be at the same level as 'config'
+      - name: event_created_at
+        tests:
+          - not_null
+      - name: event_name
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['TagLoaded', 'ProductImpressions', 'ProductClick', 'Mounts']
