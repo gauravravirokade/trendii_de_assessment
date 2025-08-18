@@ -2,12 +2,12 @@ WITH
     base_impressions
         AS (SELECT
                 product_id
+              , product_name
               , brand_id
               , event_created_at
+              , is_product_brand_in_dim
             FROM
-                {{ ref('stg_event_product_impressions') }}
---         grr_dev.stg_event_product_impressions
-    )
+                {{ ref('stg_event_product_impressions') }})
 
   , base_campaign
         AS (SELECT
@@ -17,38 +17,41 @@ WITH
               , campaign_valid_from
               , campaign_valid_to
             FROM
-                {{ ref('stg_campaign') }}
---     trendii_de_assessment.grr_dev.stg_campaign
-    )
+                {{ ref('stg_campaign') }})
 
   , campaign_impression_attribution
         AS (SELECT
                 bi.product_id
+              , bi.product_name
+              , bi.brand_id
+              , bi.is_product_brand_in_dim
               , bc.campaign_id
               , bc.campaign_name
---     *
             FROM
                 base_campaign AS bc
                     LEFT JOIN
                     base_impressions AS bi
                     ON bc.campaign_brand_id = bi.brand_id
-                        AND
-                       bi.event_created_at BETWEEN bc.campaign_valid_from AND bc.campaign_valid_to)
+                        AND bi.event_created_at BETWEEN bc.campaign_valid_from AND bc.campaign_valid_to)
 
-
---    select * from campaign_impression_attribution where campaign_id = '16962092580';
   , campaign_impression_counts
         AS (SELECT
                 campaign_id
               , campaign_name
               , product_id
+              , product_name
+              , brand_id
+              , is_product_brand_in_dim
               , COUNT(product_id) AS total_impression_count
             FROM
                 campaign_impression_attribution
             GROUP BY
                 campaign_id
               , campaign_name
-              , product_id)
+              , product_id
+              , product_name
+              , brand_id
+              , is_product_brand_in_dim)
 
   , ranked_impressions
         AS (SELECT
@@ -59,19 +62,14 @@ WITH
             ) AS rank_in_campaign
             FROM
                 campaign_impression_counts)
-
-  , final
-        AS (SELECT
-                campaign_id
-              , campaign_name
-              , product_id
-              , total_impression_count
-            FROM
-                ranked_impressions
-            WHERE
-                rank_in_campaign = 1)
-
 SELECT
-    *
+    campaign_id
+  , campaign_name
+  , product_id
+  , product_name
+  , is_product_brand_in_dim
+  , total_impression_count
 FROM
-    final
+    ranked_impressions
+WHERE
+    rank_in_campaign = 1

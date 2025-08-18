@@ -102,3 +102,21 @@ models:
         description: "Impressed product ID"
         tests:
           - not_null
+
+
+  - name: stg_product
+    description: "Staging table for Product"
+    columns:
+      - name: product_id
+        tests:
+          - not_null
+          - unique
+
+
+  - name: stg_campaign
+    description: "Staging table for Campaign"
+    columns:
+      - name: campaign_id
+        tests:
+          - not_null
+          - unique
