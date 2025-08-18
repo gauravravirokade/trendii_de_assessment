@@ -87,16 +87,12 @@ models:
     description: "Staging table for ProductImpressions events"
     config:
       indexes:
-        - columns: ['event_id','product_id','brand_id']
+        - columns: ['event_id','product_id']
     tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
             - event_id
             - product_id
-            - brand_id
-    config:
-      indexes:
-        - columns: ['event_id','product_id']
     columns:
       - name: event_id
         description: "Unique event identifier"
@@ -104,9 +100,5 @@ models:
           - not_null
       - name: product_id
         description: "Impressed product ID"
-        tests:
-          - not_null
-      - name: brand_id
-        description: "Brand of impressed product"
         tests:
           - not_null

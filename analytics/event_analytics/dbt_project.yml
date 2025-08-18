@@ -34,7 +34,7 @@ models:
     # Silver layer → staging models
     staging:
       +schema: silver
-      +materialized: incremental
+      +materialized: table
       +docs:
         node_color: "#555555"   # Silver (gray)
 

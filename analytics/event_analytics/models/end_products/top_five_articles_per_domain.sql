@@ -10,8 +10,8 @@ WITH
                    , url
                    , COUNT(*) AS cnt_tagloads
                  FROM
-                     grr_dev.stg_event_tag_loaded
--- {{ ref('stg_event_tag_loaded') }}
+--                      grr_dev.stg_event_tag_loaded
+{{ ref('stg_event_tag_loaded') }}
                  GROUP BY
                      domain, url)
 
