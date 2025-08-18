@@ -4,8 +4,8 @@ WITH
         SELECT
             domain,
             COUNT( DISTINCT event_id) AS total_tagloads
-        FROM
-            trendii_de_assessment.grr_dev.stg_event_tag_loaded
+        FROM {{ ref('stg_event_tag_loaded') }}
+--             trendii_de_assessment.grr_dev.stg_event_tag_loaded
         GROUP BY
             domain
     ),
@@ -15,8 +15,8 @@ WITH
         SELECT
             domain,
             COUNT(DISTINCT event_id) AS total_mounts
-        FROM
-            trendii_de_assessment.grr_dev.stg_event_mounts
+        FROM {{ ref('stg_event_mounts') }}
+--             trendii_de_assessment.grr_dev.stg_event_mounts
         GROUP BY
             domain
     )
