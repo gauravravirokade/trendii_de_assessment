@@ -1,3 +1,6 @@
+Here’s a cleaned-up, polished, and fully corrected version of your documentation for `data_ingestion__events.py`. I’ve fixed formatting, clarified instructions, and aligned table/column names with your script.
+
+---
 
 # Data Ingestion — `data_ingestion__events.py`
 
@@ -19,19 +22,19 @@
    ```
 
 3. **PostgreSQL Database**
-   Ensure PostgreSQL is running locally (or on an accessible host).
+   Ensure PostgreSQL is running locally or on an accessible host.
 
 4. **Directory Structure**
 
    ```
    /source_data_folder   # Incoming parquet files
    /archive_folder       # Processed files are moved here
-   logs/                 # Ingestion error logs
+   /logs/                # Ingestion error logs
    ```
 
 5. **Database Tables**
 
-   * `raw.raw_events` — stores ingested data
+   * `raw.events` — stores ingested data
    * `raw.ingestion_log` — tracks already processed files
 
 ---
@@ -42,20 +45,22 @@
    Copy the structure below and update values as needed:
 
    ```env
-   # Database connection
-   DB_NAME=trendii_de_assessment
-   DB_USER=postgres
-   DB_PASSWORD=postgres
+   # -------- Database Configuration --------
+   DB_NAME=your_database_name
+   DB_USER=your_database_user
+   DB_PASSWORD=your_database_password
    DB_HOST=localhost
    DB_PORT=5432
 
-   # Directories
-   SOURCE_DIR=/path/to/source_data_folder
-   ARCHIVE_DIR=/path/to/archive_folder
-   LOG_FILE=logs/ingestion_errors.log
+   # -------- Directories --------
+   SOURCE_DIR=/path/to/your/source/parquet/files
+   ARCHIVE_DIR=/path/to/archive/directory
 
-   # Table names
-   TARGET_TABLE=raw.raw_events
+   # -------- Logging --------
+   LOG_FILE=/path/to/log/ingestion.log
+
+   # -------- Tables --------
+   TARGET_TABLE=database_name.schema_name.table_name
    LOG_TABLE=raw.ingestion_log
    ```
 
@@ -65,18 +70,22 @@
 
 ## ⚙️ How It Works
 
-1. Connects to PostgreSQL.
-2. Ensures the `raw` schema and ingestion log table exist.
-3. Scans the source folder for new `.parquet` files.
-4. For each file:
+1. Connects to PostgreSQL using credentials from `.env`.
+2. Ensures the `raw` schema exists.
+3. Creates the ingestion log table (`raw.ingestion_log`) if it doesn’t exist.
+4. Scans the source folder for new `.parquet` files that have not already been ingested.
+5. For each new file:
 
    * Reads the parquet file (using **PyArrow**).
-   * Adds `source_file_name` and `ingested_at` columns.
-   * Validates JSON fields (`event_data`, `event_context`) and makes them serializable.
-   * Creates the target table if not already present (all columns stored as `TEXT`).
-   * Inserts all rows into `raw.raw_events`.
-   * Logs the ingestion in `raw.ingestion_log`.
-   * Moves the file to the archive folder.
+   * Adds metadata columns:
+
+     * `source_file_name` — name of the file ingested
+     * `ingested_at` — timestamp of ingestion
+   * Converts `event_data` and `event_context` columns to JSONB-compatible strings.
+   * Ensures the target table exists (`raw.events`) with appropriate column types.
+   * Inserts all rows into the target table.
+   * Logs ingestion in `raw.ingestion_log`.
+   * Moves the processed file to the archive folder.
 
 ---
 
@@ -85,10 +94,10 @@
 The script handles:
 
 * **Missing parquet engine** → Requires `pyarrow` or `fastparquet`.
-* **Invalid JSON** → Converts NumPy objects to JSON-serializable formats; logs failures.
-* **Database errors** → Rolls back failed transactions; logs details.
-* **Duplicate ingestion** → Skips already processed files via `ingestion_log`.
-* **File movement issues** → Ensures processed files are archived.
+* **Invalid JSON** → Converts NumPy/Pandas types to JSON-serializable formats; logs failures.
+* **Database errors** → Rolls back failed transactions and logs details.
+* **Duplicate ingestion** → Skips already processed files via `raw.ingestion_log`.
+* **File movement issues** → Ensures processed files are archived even if ingestion partially fails.
 
 ---
 
@@ -101,3 +110,7 @@ This script ingests parquet files into PostgreSQL with:
 * Robust error handling and logging
 * Prevention of duplicate ingestion
 * Archiving of processed files
+
+---
+
+If you want, I can also **add a step-by-step example of running the script**, showing how a parquet file flows from source → database → archive, which makes the documentation much more user-friendly. Do you want me to do that?
