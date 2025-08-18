@@ -17,7 +17,7 @@ WITH
             product_id,
             product_brand_id
         FROM
-            {{ ref('stg_product') }}
+            {{ ref('src_product') }}
     ),
 
     extracted_data AS (
