@@ -1,0 +1,112 @@
+version: 2
+
+models:
+
+  - name: stg_event_data_profiling
+    description: "Event profiling with hypothesis validation flags (1 = pass, 0 = fail)."
+    columns:
+      - name: is_tagloaded_data_valid
+        description: "Validates TagLoaded has no populated fields"
+        tests:
+          - accepted_values:
+              values: [1]
+              severity: warn
+      - name: is_mounts_data_valid
+        description: "Validates Mounts only has mounts populated"
+        tests:
+          - accepted_values:
+              values: [1]
+              severity: warn
+      - name: is_productclick_data_valid
+        description: "Validates ProductClick only has single product fields populated"
+        tests:
+          - accepted_values:
+              values: [1]
+              severity: warn
+      - name: is_productimpressions_data_valid
+        description: "Validates ProductImpressions has only products + image_id populated"
+        tests:
+          - accepted_values:
+              values: [1]
+              severity: warn
+
+
+  - name: stg_event_tag_loaded
+    description: "Staging table for TagLoaded events"
+    config:
+      indexes:
+        - columns: ['event_id']
+    columns:
+      - name: event_id
+        description: "Unique event identifier"
+        tests:
+          - not_null
+          - unique
+
+
+  - name: stg_event_mounts
+    description: "Staging table for Mounts events"
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - event_id
+            - mount_index
+    config:
+      indexes:
+        - columns: ['event_id','mount_index']
+    columns:
+      - name: event_id
+        description: "Unique event identifier"
+        tests:
+          - not_null
+      - name: mount_index
+        description: "Array of mounted images"
+        tests:
+          - not_null
+
+
+  - name: stg_event_product_click
+    description: "Staging table for ProductClick events"
+    config:
+      indexes:
+        - columns: ['event_id']
+    columns:
+      - name: event_id
+        description: "Unique event identifier"
+        tests:
+          - not_null
+          - unique
+      - name: product_id
+        description: "Clicked product ID"
+        tests:
+          - not_null
+      - name: event_name
+
+
+  - name: stg_event_product_impressions
+    description: "Staging table for ProductImpressions events"
+    config:
+      indexes:
+        - columns: ['event_id','product_id','brand_id']
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - event_id
+            - product_id
+            - brand_id
+    config:
+      indexes:
+        - columns: ['event_id','product_id']
+    columns:
+      - name: event_id
+        description: "Unique event identifier"
+        tests:
+          - not_null
+      - name: product_id
+        description: "Impressed product ID"
+        tests:
+          - not_null
+      - name: brand_id
+        description: "Brand of impressed product"
+        tests:
+          - not_null

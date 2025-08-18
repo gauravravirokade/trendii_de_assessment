@@ -5,8 +5,12 @@ models:
     description: source model for all events data
     config:
       indexes:
-        - columns: ['event_name']
+        - columns: ['event_id','event_name']
     columns: # This 'columns' should be at the same level as 'config'
+      - name: event_id
+        tests:
+          - not_null
+          - unique
       - name: event_created_at
         tests:
           - not_null
