@@ -4,8 +4,7 @@ WITH
                 *
             FROM
 --                 grr_dev.stg_event_product_click
-        {{ ref('stg_event_product_click') }}
-    )
+{{ ref('stg_event_product_click') }})
 
   , max_date
         AS (SELECT
@@ -38,19 +37,18 @@ WITH
                 final_week_clicks
             GROUP BY
                 brand_id, product_id, product_name)
-  , final AS (SELECT
-                  brand_id
-                , product_id
-                , product_name
-                , click_count
-              FROM
-                  ranked_products
-              WHERE
-                  rank_in_brand <= 3)
+  , final
+        AS (SELECT
+                brand_id
+              , product_id
+              , product_name
+              , click_count
+            FROM
+                ranked_products
+            WHERE
+                rank_in_brand <= 3)
 
 SELECT
     *
 FROM
     final
-ORDER BY
-    brand_id, click_count DESC
