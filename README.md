@@ -11,7 +11,6 @@ This repository contains a **full data pipeline** that ingests event data, model
   - **Bronze (source)**: wraps raw tables (`src_events`, `src_product`, `src_campaign`)
   - **Silver (staging)**: cleansed, standardized, and deduplicated data
   - **Gold (end products)**: analytics-ready outputs (campaign metrics, product performance, dashboards)
-- **`output.txt` & `test_file`** — auxiliary or temporary files
 
 ---
 
