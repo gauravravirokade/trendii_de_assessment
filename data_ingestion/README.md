@@ -1,6 +1,3 @@
-Here’s a cleaned-up, polished, and fully corrected version of your documentation for `data_ingestion__events.py`. I’ve fixed formatting, clarified instructions, and aligned table/column names with your script.
-
----
 
 # Data Ingestion — `data_ingestion__events.py`
 
@@ -111,6 +108,3 @@ This script ingests parquet files into PostgreSQL with:
 * Prevention of duplicate ingestion
 * Archiving of processed files
 
----
-
-If you want, I can also **add a step-by-step example of running the script**, showing how a parquet file flows from source → database → archive, which makes the documentation much more user-friendly. Do you want me to do that?
