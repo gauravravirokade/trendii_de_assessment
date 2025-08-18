@@ -1,5 +1,4 @@
 
-
 # Data Ingestion — `data_ingestion__events.py`
 
 ## Pre-requisites
@@ -9,16 +8,18 @@
 
 2. **Required Python Packages**
 
+   ```bash
    pip install pandas pyarrow numpy psycopg2-binary python-dotenv
+   ```
 
+   *If using Conda:*
 
-*If using Conda:*
-
-conda install -c conda-forge pandas pyarrow numpy psycopg2
-
+   ```bash
+   conda install -c conda-forge pandas pyarrow numpy psycopg2
+   ```
 
 3. **PostgreSQL Database**
-   Ensure PostgreSQL is running locally (or on an accessible host) and credentials are set in `DB_CONFIG` or `.env`.
+   Ensure PostgreSQL is running locally (or on an accessible host).
 
 4. **Directory Structure**
 
@@ -32,6 +33,33 @@ conda install -c conda-forge pandas pyarrow numpy psycopg2
 
    * `raw.raw_events` — stores ingested data
    * `raw.ingestion_log` — tracks already processed files
+
+---
+
+## ⚙️ Setup
+
+1. **Create a `.env` file** in the root of your project.
+   Copy the structure below and update values as needed:
+
+   ```env
+   # Database connection
+   DB_NAME=trendii_de_assessment
+   DB_USER=postgres
+   DB_PASSWORD=postgres
+   DB_HOST=localhost
+   DB_PORT=5432
+
+   # Directories
+   SOURCE_DIR=/path/to/source_data_folder
+   ARCHIVE_DIR=/path/to/archive_folder
+   LOG_FILE=logs/ingestion_errors.log
+
+   # Table names
+   TARGET_TABLE=raw.raw_events
+   LOG_TABLE=raw.ingestion_log
+   ```
+
+   > The script automatically loads environment variables from `.env` using `python-dotenv`.
 
 ---
 
@@ -73,6 +101,3 @@ This script ingests parquet files into PostgreSQL with:
 * Robust error handling and logging
 * Prevention of duplicate ingestion
 * Archiving of processed files
-
-It’s suitable for development and production ingestion pipelines.
-
